@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -12,6 +13,11 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI currentLifePointsText;
 
+    [SerializeField]
+    private SpriteRenderer sr;
+
+    private bool isInvulnerable = false;
+
     void Awake()
     {
         currentLifePoints = maxLifePoints;
@@ -20,8 +26,56 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage()
     {
+        {
+            if (isInvulnerable)
+            {
+                return;
+            }
+        }
         currentLifePoints = Mathf.Clamp(currentLifePoints - 1, 0, maxLifePoints);
         currentLifePointsText.SetText(currentLifePoints.ToString());
+        StartCoroutine(InvulnerableFlash());
     }
 
+IEnumerator InvulnerableFlash()
+    {
+        isInvulnerable = true;
+ 
+        // Durée de l'invulnerabilité
+        float invulnerableDuration = 1.25f;
+        // Temps écoulé durant la période d'invulnerabilité
+        float timeElapsed = 0;
+ 
+        // Durée durant laquelle le sprite est visible ou invisible
+        float flashInvulnerabilityDuration = 0.2f;
+        // Temps écoulé durant la période de visibilité ou invisibilité
+        float flashTimeElapsed = 0;
+        bool isVisible = true;
+ 
+        while (timeElapsed < invulnerableDuration)
+        {
+            timeElapsed += Time.deltaTime;
+            flashTimeElapsed += Time.deltaTime;
+ 
+            if (flashTimeElapsed >= flashInvulnerabilityDuration)
+            {
+                if (isVisible)
+                {
+                    sr.color = Color.clear;
+                } else
+                {
+                    sr.color = Color.white;
+                }
+ 
+                flashTimeElapsed = 0;
+                isVisible = !isVisible;
+            }
+ 
+            // Attendre le rafraichissement de l'écran
+            yield return null;
+        }
+ 
+        sr.color = Color.white;
+        isInvulnerable = false;
+    }
 }
