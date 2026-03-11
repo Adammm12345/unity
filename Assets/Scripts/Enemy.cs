@@ -16,11 +16,11 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             ContactPoint2D contact = collision.GetContact(0);
 
-            if (contact.normal.y > 0.5f)
+            if (contact.normal.y < -0.5f)
             {
                 Destroy(gameObject);
             }
