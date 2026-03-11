@@ -25,6 +25,7 @@ public class PlayerHealth : MonoBehaviour
     {
         currentLifePoints = maxLifePoints;
         currentLifePointsText.SetText(currentLifePoints.ToString());
+        healthBar.SetHealth((float)currentLifePoints / maxLifePoints);
     }
 
     public void TakeDamage()
